@@ -158,6 +158,37 @@ while(i<nkoi)  // Loop over all KOI's
           texout << "\\end{overpic}" << endl
                  << "\\end{tabular*}" << endl
                  << "\\clearpage" << endl;
+       
+                 
+// EB Double period                 
+  texout
+          << "\\pdfbookmark[0]{Double Periods}{Double Periods}" << endl
+          << "\\newgeometry{left=0.25in,right=0.05in,top=0.15in,bottom=0.15in,noheadfoot} " << endl
+          << "\\begin{tabular*}{11in}{cc}" << endl;
+          tmpstr1 = PDFDIR + koiname[i] + "/eb_Px2.png";
+          if(fexists(tmpstr1.c_str()))
+            texout << "\\begin{overpic}[width=5.25in,height=4.5in,keepaspectratio,tics=25,trim=0 0 0 0,clip]{" << tmpstr1 << "}" << endl;
+          else
+            texout << "\\begin{overpic}[width=5.25in,tics=20,trim=0 0 0 0,clip]{NoPlot.png}" << endl;
+          texout << "\\end{overpic} & " << endl;
+          
+          tmpstr1 = PDFDIR + koiname[i] + "/heb_Px2.png";
+          if(fexists(tmpstr1.c_str()))
+            texout << "\\begin{overpic}[width=5.25in,height=4.5in,keepaspectratio,tics=25,trim=0 0 0 0,clip]{" << tmpstr1 << "}" << endl;
+          else
+            texout << "\\begin{overpic}[width=5.25in,tics=20,trim=0 0 0 0,clip]{NoPlot.png}" << endl;
+          texout << "\\end{overpic} \\\\ " << endl;
+          
+          texout << "\\parbox{5.25in}{\\vspace{-4in}\\LARGE Trapezoid shape parameter likelihood surface plots for the false positive scenarios considered by `vespa', specifically for a scenario where the KOI is detected at half the true orbital period. EB = undiluted eclipsing binary, HEB = hierarchical triple eclipsing binary, and BEB = blended eclipsing binary (chance-aligned).  The red ‘x’ and error bars represent the shape of the observed signal.} & " << endl;
+
+          tmpstr1 = PDFDIR + koiname[i] + "/beb_Px2.png";
+          if(fexists(tmpstr1.c_str()))
+            texout << "\\begin{overpic}[width=5.25in,height=4.5in,keepaspectratio,tics=25,trim=0 0 0 0,clip]{" << tmpstr1 << "}" << endl;
+          else
+            texout << "\\begin{overpic}[width=5.25in,tics=20,trim=0 0 0 0,clip]{NoPlot.png}" << endl;
+          texout << "\\end{overpic}" << endl
+                 << "\\end{tabular*}" << endl
+                 << "\\clearpage" << endl;
                  
                  
 // First single triangle plot
