@@ -50,8 +50,8 @@ int i;  // General counting integer
 ifstream input;  // Input TCE list variable
 string infilename;  // File name of input file
 ofstream texout;  // Output variable for generating latex files
-string koiname[N],pdfoutname,syscmd,tmpstr1;  // Array of KOI names, name of the output tex/pdf file, string to execute a system command, and a temp string
-int nkoi;
+string koiname[N],pdfoutname,syscmd,tmpstr1,koibasename;  // Array of KOI names, name of the output tex/pdf file, string to execute a system command, and a temp string
+int nkoi;  // Number of kois
 
   
 // Get input filename from command line, else prompt for it
@@ -87,21 +87,26 @@ if(nkoi==0)
 i=0;
 while(i<nkoi)  // Loop over all KOI's
   {
-  pdfoutname = koiname[i] + ".tex";  // The name of the tex/pdf file
-  texout.open(pdfoutname.c_str());  // Open the tex file for writing 
-  
-  
-  texout  << "\\documentclass[letterpaper,10pt]{article}" << endl  // Output all the tex to the file
-          << "\\usepackage[bookmarks=true]{hyperref}" << endl      // Enable PDF bookmarks
-          << "\\usepackage[landscape,left=0.0in,right=0in,top=0.0in,bottom=0in,noheadfoot]{geometry}" << endl  // Initialize geometry
-          << "\\usepackage[abs]{overpic}" << endl  // Main package for overlaying plots and text
-          << "\\begin{document}" << endl   // Begin doc
-          << "\\pagestyle{empty}" << endl;  // empty pages to put plots on
+  if(koiname[i].substr(0,6) != koibasename)  // If starting new base KOI
+    {
+    koibasename = koiname[i].substr(0,6);
+    pdfoutname = koibasename + ".tex";  // The name of the tex/pdf file
+    texout.open(pdfoutname.c_str());  // Open the tex file for writing 
+    
+    
+    texout  << "\\documentclass[letterpaper,10pt]{article}" << endl  // Output all the tex to the file
+            << "\\usepackage[bookmarks=true]{hyperref}" << endl      // Enable PDF bookmarks
+            << "\\usepackage[landscape,left=0.0in,right=0in,top=0.0in,bottom=0in,noheadfoot]{geometry}" << endl  // Initialize geometry
+            << "\\usepackage[abs]{overpic}" << endl  // Main package for overlaying plots and text
+            << "\\begin{document}" << endl   // Begin doc
+            << "\\pagestyle{empty}" << endl;  // empty pages to put plots on
+    }
           
 
 // Summary page          
   texout
-          << "\\pdfbookmark[0]{Summary}{Summary}" << endl
+          << "\\pdfbookmark[0]{" << koiname[i] << "}{" << koiname[i] << "}" << endl
+          << "\\pdfbookmark[1]{Summary}{Summary" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.05in,top=0.15in,bottom=0.15in,noheadfoot} " << endl
           << "\\begin{tabular*}{11in}{cc}" << endl;
           tmpstr1 = PDFDIR + koiname[i] + "/FPPsummary.png";
@@ -131,7 +136,7 @@ while(i<nkoi)  // Loop over all KOI's
                       
 // EB Fractions                 
   texout
-          << "\\pdfbookmark[0]{EB Probabilities}{EB Probabilities}" << endl
+          << "\\pdfbookmark[1]{EB Probabilities}{EB Probabilities" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.05in,top=0.15in,bottom=0.15in,noheadfoot} " << endl
           << "\\begin{tabular*}{11in}{cc}" << endl;
           tmpstr1 = PDFDIR + koiname[i] + "/eb.png";
@@ -162,7 +167,7 @@ while(i<nkoi)  // Loop over all KOI's
                  
 // EB Double period                 
   texout
-          << "\\pdfbookmark[0]{Double Periods}{Double Periods}" << endl
+          << "\\pdfbookmark[1]{Double Periods}{Double Periods" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.05in,top=0.15in,bottom=0.15in,noheadfoot} " << endl
           << "\\begin{tabular*}{11in}{cc}" << endl;
           tmpstr1 = PDFDIR + koiname[i] + "/eb_Px2.png";
@@ -193,7 +198,7 @@ while(i<nkoi)  // Loop over all KOI's
                  
 // First single triangle plot
   texout
-          << "\\pdfbookmark[0]{Single Star Isochrones}{Single Star Isochrones}" << endl
+          << "\\pdfbookmark[1]{Single Star Isochrones}{Single Star Isochrones" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.25in,top=0.25in,bottom=0.25in,noheadfoot}" << endl;
 
           tmpstr1 = PDFDIR + koiname[i] + "/dartmouth_triangle_single_physical.png";
@@ -212,7 +217,7 @@ while(i<nkoi)  // Loop over all KOI's
             
 // Second single triangle plot
   texout
-          << "\\pdfbookmark[0]{Single Star Correlation}{Single Star Correlation}" << endl
+          << "\\pdfbookmark[1]{Single Star Correlation}{Single Star Correlation" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.25in,top=0.25in,bottom=0.25in,noheadfoot}" << endl;
 
           tmpstr1 = PDFDIR + koiname[i] + "/dartmouth_triangle_single_observed.png";
@@ -233,7 +238,7 @@ while(i<nkoi)  // Loop over all KOI's
     
 // First binary triangle plot
   texout
-          << "\\pdfbookmark[0]{Binary Star Isochrones}{Binary Star Isochrones}" << endl
+          << "\\pdfbookmark[1]{Binary Star Isochrones}{Binary Star Isochrones" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.25in,top=0.25in,bottom=0.25in,noheadfoot}" << endl;
 
           tmpstr1 = PDFDIR + koiname[i] + "/dartmouth_triangle_binary_physical.png";
@@ -252,7 +257,7 @@ while(i<nkoi)  // Loop over all KOI's
             
 // Second binary triangle plot
   texout
-          << "\\pdfbookmark[0]{Binary Star Correlation}{Binary Star Correlation}" << endl
+          << "\\pdfbookmark[1]{Binary Star Correlation}{Binary Star Correlation" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.25in,top=0.25in,bottom=0.25in,noheadfoot}" << endl;
 
           tmpstr1 = PDFDIR + koiname[i] + "/dartmouth_triangle_binary_observed.png";
@@ -273,7 +278,7 @@ while(i<nkoi)  // Loop over all KOI's
             
 // First triple triangle plot
   texout
-          << "\\pdfbookmark[0]{Triple Star Isochrones}{Triple Star Isochrones}" << endl
+          << "\\pdfbookmark[1]{Triple Star Isochrones}{Triple Star Isochrones" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.25in,top=0.25in,bottom=0.25in,noheadfoot}" << endl;
 
           tmpstr1 = PDFDIR + koiname[i] + "/dartmouth_triangle_triple_physical.png";
@@ -292,7 +297,7 @@ while(i<nkoi)  // Loop over all KOI's
             
 // Second triple triangle plot
   texout
-          << "\\pdfbookmark[0]{Triple Star Correlation}{Triple Star Correlation}" << endl
+          << "\\pdfbookmark[1]{Triple Star Correlation}{Triple Star Correlation" << koiname[i] << "}" << endl
           << "\\newgeometry{left=0.25in,right=0.25in,top=0.25in,bottom=0.25in,noheadfoot}" << endl;
 
           tmpstr1 = PDFDIR + koiname[i] + "/dartmouth_triangle_triple_observed.png";
@@ -310,27 +315,29 @@ while(i<nkoi)  // Loop over all KOI's
             << "\\end{overpic}" << endl
             << "\\clearpage" << endl;
            
-
-  texout  << "\\end{document}" << endl;  // End document
-  texout.close();  // Close tex file
-  
-  // Now run pdflatex and make PDF
-  syscmd = "pdflatex " + pdfoutname;  // The command we're going to execute - pdflatex pdfoutname.tex
-  system(syscmd.c_str());   // Execute pdflatex to build the pdf file
-  system(syscmd.c_str());   // Gotta do it twice for the hyperlinks to be created and then updated
-  
-  // And clean up non-PDF files
-  syscmd = "rm " + koiname[i] + ".tex";
-  system(syscmd.c_str());
-  
-  syscmd = "rm " + koiname[i] + ".out";
-  system(syscmd.c_str());
-  
-  syscmd = "rm " + koiname[i] + ".aux";
-  system(syscmd.c_str());
-  
-  syscmd = "rm " + koiname[i] + ".log";
-  system(syscmd.c_str());
+  if(i==nkoi || koiname[i+1].substr(0,6)!=koibasename)
+    {
+    texout  << "\\end{document}" << endl;  // End document
+    texout.close();  // Close tex file
+    
+    // Now run pdflatex and make PDF
+    syscmd = "pdflatex " + pdfoutname;  // The command we're going to execute - pdflatex pdfoutname.tex
+    system(syscmd.c_str());   // Execute pdflatex to build the pdf file
+    system(syscmd.c_str());   // Gotta do it twice for the hyperlinks to be created and then updated
+    
+    // And clean up non-PDF files
+    syscmd = "rm " + koibasename + ".tex";
+    system(syscmd.c_str());
+    
+    syscmd = "rm " + koibasename + ".out";
+    system(syscmd.c_str());
+    
+    syscmd = "rm " + koibasename + ".aux";
+    system(syscmd.c_str());
+    
+    syscmd = "rm " + koibasename + ".log";
+    system(syscmd.c_str());
+    }
   
   
   i++;  // Go to next KOI
